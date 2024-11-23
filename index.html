@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(45deg, #f3f4f6, #ffffff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            transition: background 0.5s ease;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-out;
+            width: 400px;
+            transition: background 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        h1 {
+            color: #374151;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            transition: color 0.5s ease;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+            transition: color 0.5s ease;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.5s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(45deg, #60a5fa, #3b82f6);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #ef4444;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* 夜间模式样式 */
+        body.dark-mode {
+            background: linear-gradient(45deg, #1a1a1a, #2d3748);
+        }
+
+        body.dark-mode .container {
+            background: rgba(30, 30, 30, 0.9);
+        }
+
+        body.dark-mode h1 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode label {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode input {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode input:focus {
+            border-color: #60a5fa;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        .register-button {
+            background: linear-gradient(45deg, #10b981, #059669) !important;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body.dark-mode .modal {
+            background: #1f2937;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    <div class="container">
+        <h1>登录</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" placeholder="请输入用户名">
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" placeholder="请输入密码">
+            </div>
+            <div class="button-group">
+                <button type="submit">登录</button>
+                <button type="button" class="register-button" onclick="showRegisterModal()">注册</button>
+            </div>
+        </form>
+        <p id="errorMessage" class="error-message">用户名或密码错误</p>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal">
+            <h2>注册新用户</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="newUsername">用户名</label>
+                    <input type="text" id="newUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">密码</label>
+                    <input type="password" id="newPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">确认密码</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <div class="button-group">
+                    <button type="button" onclick="closeRegisterModal()">取消</button>
+                    <button type="submit" class="register-button">注册</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="user.js"></script>
+    <script>
+        // 修改登录处理
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const result = validateUser(username, password);
+            if (result.success) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('loginTime', Date.now().toString());
+                localStorage.setItem('currentUser', username);
+                localStorage.setItem('userType', result.userType);
+                window.location.href = 'home.html';
+            } else {
+                document.getElementById('errorMessage').textContent = result.message;
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+
+        // 注册相关函数
+        function showRegisterModal() {
+            document.getElementById('registerModal').style.display = 'flex';
+        }
+
+        function closeRegisterModal() {
+            document.getElementById('registerModal').style.display = 'none';
+            document.getElementById('registerForm').reset();
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                return;
+            }
+
+            const result = registerUser(username, password);
+            if (result.success) {
+                alert('注册成功，请登录');
+                closeRegisterModal();
+            } else {
+                alert(result.message);
+            }
+        });
+
+        // 点击遮罩层关闭模态框
+        document.getElementById('registerModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRegisterModal();
+            }
+        });
+
+        // 检查登录状态和过期时间
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const loginTime = localStorage.getItem('loginTime');
+            const currentTime = Date.now();
+            const oneDayInMs = 24 * 60 * 60 * 1000; // 一天的毫秒数
+
+            if (isLoggedIn === 'true' && loginTime) {
+                // 检查是否过期
+                if (currentTime - parseInt(loginTime) > oneDayInMs) {
+                    // 登录已过期，清除登录状态
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('loginTime');
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        // 页面加载时检查登录状态
+        document.addEventListener('DOMContentLoaded', () => {
+            // 检查主题
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            }
+
+            // 检查登录状态和过期时间
+            if (checkLoginStatus()) {
+                window.location.href = 'home.html';
+            }
+        });
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // 添加用户注册函数
+        function registerUser(username, password) {
+            const users = JSON.parse(localStorage.getItem('users')) || {
+                'Admin': {
+                    password: '123456',
+                    type: 'admin',
+                    registerDate: '2024-03-21'
+                }
+            };
+
+            if (users[username]) {
+                return {
+                    success: false,
+                    message: '用户名已存在'
+                };
+            }
+
+            users[username] = {
+                password: password,
+                type: 'user',
+                registerDate: new Date().toLocaleDateString()
+            };
+            
+            localStorage.setItem('users', JSON.stringify(users));
+            return {
+                success: true,
+                message: '注册成功'
+            };
+        }
+
+        // 添加用户验证函数
+        function validateUser(username, password) {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const user = users[username];
+            
+            if (!user) {
+                return {
+                    success: false,
+                    message: '用户不存在'
+                };
+            }
+
+            if (user.password !== password) {
+                return {
+                    success: false,
+                    message: '密码错误'
+                };
+            }
+
+            return {
+                success: true,
+                message: '登录成功',
+                userType: user.type
+            };
+        }
+    </script>
+</body>
+</html> 
