@@ -252,12 +252,12 @@
     <script src="user.js"></script>
     <script>
         // 修改登录处理
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            const result = validateUser(username, password);
+            const result = await validateUser(username, password);
             if (result.success) {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('loginTime', Date.now().toString());
@@ -280,7 +280,32 @@
             document.getElementById('registerForm').reset();
         }
 
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        // 修改注册函数为异步函数
+        async function registerUser(username, password) {
+            const users = await UserManager.getUsers();
+
+            if (users[username]) {
+                return {
+                    success: false,
+                    message: '用户名已存在'
+                };
+            }
+
+            users[username] = {
+                password: password,
+                type: 'user',
+                registerDate: new Date().toLocaleDateString()
+            };
+            
+            await UserManager.saveUsers(users);
+            return {
+                success: true,
+                message: '注册成功'
+            };
+        }
+
+        // 修改注册表单提交处理
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const username = document.getElementById('newUsername').value;
             const password = document.getElementById('newPassword').value;
@@ -291,7 +316,7 @@
                 return;
             }
 
-            const result = registerUser(username, password);
+            const result = await registerUser(username, password);
             if (result.success) {
                 alert('注册成功，请登录');
                 closeRegisterModal();
@@ -359,33 +384,9 @@
             }
         }
 
-        // 添加用户注册函数
-        function registerUser(username, password) {
-            const users = UserManager.getUsers();
-
-            if (users[username]) {
-                return {
-                    success: false,
-                    message: '用户名已存在'
-                };
-            }
-
-            users[username] = {
-                password: password,
-                type: 'user',
-                registerDate: new Date().toLocaleDateString()
-            };
-            
-            UserManager.saveUsers(users);
-            return {
-                success: true,
-                message: '注册成功'
-            };
-        }
-
-        // 添加用户验证函数
-        function validateUser(username, password) {
-            const users = JSON.parse(localStorage.getItem('users')) || {};
+        // 修改验证函数为异步函数
+        async function validateUser(username, password) {
+            const users = await UserManager.getUsers();
             const user = users[username];
             
             if (!user) {
