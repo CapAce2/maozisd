@@ -361,13 +361,7 @@
 
         // 添加用户注册函数
         function registerUser(username, password) {
-            const users = JSON.parse(localStorage.getItem('users')) || {
-                'Admin': {
-                    password: '123456',
-                    type: 'admin',
-                    registerDate: '2024-03-21'
-                }
-            };
+            const users = UserManager.getUsers();
 
             if (users[username]) {
                 return {
@@ -382,7 +376,7 @@
                 registerDate: new Date().toLocaleDateString()
             };
             
-            localStorage.setItem('users', JSON.stringify(users));
+            UserManager.saveUsers(users);
             return {
                 success: true,
                 message: '注册成功'
