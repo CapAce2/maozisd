@@ -811,6 +811,26 @@
                         </button>
                     </div>
                 </div>
+
+                <div class="game-card">
+                    <img src="ssnbb.png" alt="ssnbb" class="game-image">
+                    <div class="game-info">
+                        <div class="game-title">谁是你爸爸</div>
+                        <p class="game-description">
+                            游戏模式简单而有趣，
+                            玩家在游戏中扮演两个角色之一：
+                            婴儿或父亲。婴儿的目标是尽可能多地尝试各种方法自杀，
+                            如喝洁厕剂、吞电池、吃垃圾等，
+                            而父亲的角色则是要阻止婴儿的自杀行为，
+                            确保其安全。
+                        </p>
+                        <div class="game-price">¥114.00</div>
+                        <button class="cart-button" onclick="addToCart('谁是你爸爸', 114.00)" type="button">
+                            <span>🛒</span>
+                            <span>加入购物车</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1011,7 +1031,7 @@
                     <li>如遇问题请及时反馈</li>
                 </ol>
                 <br>
-                <em>最后更新时间：${new Date().toLocaleString()}</em>
+                <em>最后更新时间：2024/11/24</em>
             `;
             
             document.querySelector('.notice-content').innerHTML = noticeContent;
@@ -1304,6 +1324,9 @@
                     break;
                 case 'GTA4':
                     downloadUrl = 'https://www.123684.com/s/Xv2tVv-1q3AA';
+                    break;
+                case '谁是你爸爸':
+                    downloadUrl = 'https://www.123684.com/s/Xv2tVv-Tj3AA';
                     break;
                 default:
                     showToast('下载链接不存在', 'error');
